@@ -1,0 +1,36 @@
+{
+  "server_settings": {
+    "tcp_port": 8082,
+    "shared_memory_size": 65536,
+    "log_level": "ERROR",
+    "max_history_size": 10
+  },
+  "modbus_tcp": {
+    "connection_parameters": {
+      "primary": {
+        "host": "test.local",
+        "port": 502,
+        "timeout_ms": 100,
+        "retry_interval_ms": 100,
+        "max_retries": 2
+      }
+    },
+    "variables": {
+      "test_temp": {
+        "id": 999001,
+        "name": "TestTemperature",
+        "address": 100,
+        "type": "float32",
+        "polling_interval_ms": 500
+      },
+      "test_pressure": {
+        "id": 999002,
+        "name": "TestPressure",
+        "address": 104,
+        "type": "float32",
+        "polling_interval_ms": 500
+      }
+    },
+    "polling_interval_ms": 100
+  }
+}
