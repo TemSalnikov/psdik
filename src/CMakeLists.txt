@@ -12,7 +12,7 @@
 # )
 
 set(SOURCES
-    ./src/psdik.cpp
+    psdik.cpp
 )
 
 # Заголовочные файлы
@@ -36,7 +36,9 @@ set(HEADERS
 add_library(data_server_lib STATIC ${SOURCES})
 
 # Основной исполняемый файл
-add_executable(data_server main.cpp)
+# add_executable(data_server main.cpp)
+add_executable(data_server psdik.cpp)
+
 
 # Связывание зависимостей
 target_link_libraries(data_server

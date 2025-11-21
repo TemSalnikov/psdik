@@ -1,0 +1,53 @@
+# config/config.json.in - шаблон конфигурационного файла
+
+{
+  "server_settings": {
+    "tcp_port": @DATA_SERVER_TCP_PORT@,
+    "shared_memory_size": 65536,
+    "log_level": "INFO",
+    "max_history_size": 100,
+    "performance": {
+      "max_threads": 10,
+      "queue_size": 1000
+    }
+  },
+  "modbus_tcp": {
+    "connection_parameters": {
+      "primary": {
+        "host": "192.168.1.100",
+        "port": 502,
+        "unit_id": 1,
+        "timeout_ms": 5000,
+        "retry_interval_ms": 5000,
+        "max_retries": 3
+      },
+      "secondary": []
+    },
+    "variables": {},
+    "polling_interval_ms": 100
+  },
+  "iec104": {
+    "connection_parameters": {
+      "primary": {
+        "host": "192.168.1.200",
+        "port": 2404,
+        "common_address": 1,
+        "timeout_ms": 10000
+      }
+    },
+    "variables": {},
+    "polling_interval_ms": 100
+  },
+  "snmp": {
+    "connection_parameters": {
+      "primary": {
+        "host": "192.168.1.300",
+        "port": 161,
+        "community": "public",
+        "timeout_ms": 5000
+      }
+    },
+    "variables": {},
+    "polling_interval_ms": 5000
+  }
+}

@@ -1,0 +1,19 @@
+// src/version.h.in - шаблон файла версии
+
+#ifndef DATA_SERVER_VERSION_H
+#define DATA_SERVER_VERSION_H
+
+#define DATA_SERVER_VERSION_MAJOR @DataServer_VERSION_MAJOR@
+#define DATA_SERVER_VERSION_MINOR @DataServer_VERSION_MINOR@
+#define DATA_SERVER_VERSION_PATCH @DataServer_VERSION_PATCH@
+
+#define DATA_SERVER_VERSION_STRING "@DataServer_VERSION_MAJOR@.@DataServer_VERSION_MINOR@.@DataServer_VERSION_PATCH@"
+
+namespace DataServer {
+    constexpr int VERSION_MAJOR = DATA_SERVER_VERSION_MAJOR;
+    constexpr int VERSION_MINOR = DATA_SERVER_VERSION_MINOR;
+    constexpr int VERSION_PATCH = DATA_SERVER_VERSION_PATCH;
+    constexpr const char* VERSION_STRING = DATA_SERVER_VERSION_STRING;
+}
+
+#endif // DATA_SERVER_VERSION_H
