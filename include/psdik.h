@@ -29,7 +29,7 @@ private:
     std::uniform_int_distribution<int64_t> dis;
     
 public:
-    IdGenerator() : gen(rd()), dis(1, 1LL << 62);
+    IdGenerator() : gen(rd()), dis(1, 1LL << 62) {}
     
     int64_t generate();
     // Для восстановления ID из конфига
@@ -168,7 +168,7 @@ private:
     std::chrono::steady_clock::time_point lastConfigCheck;
     
 public:
-    DataServer() : subscriptionManager(dataCache) ;
+    DataServer() : subscriptionManager(dataCache) {}
     void loadConfig(const std::string& filename) ;
     void restoreIdCounter() ;    
     void generateMissingIds() ;    

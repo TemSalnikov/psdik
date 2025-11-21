@@ -1,3 +1,4 @@
 build/
 contrib/
 build_debug/
+.vscode/

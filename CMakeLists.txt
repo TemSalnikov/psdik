@@ -8,6 +8,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Указываем путь к локальному Boost
+set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/contrib/boost)
+set(BOOST_INCLUDEDIR ${BOOST_ROOT})
+set(BOOST_LIBRARYDIR ${BOOST_ROOT}/libs)
+
 # Политики CMake
 if(POLICY CMP0077)
     cmake_policy(SET CMP0077 NEW)
@@ -29,7 +34,7 @@ include(GNUInstallDirs)
 find_package(PkgConfig REQUIRED)
 
 # Boost
-find_package(Boost 1.66.0 REQUIRED 
+find_package(Boost REQUIRED 
     COMPONENTS 
     system 
     thread 
@@ -38,6 +43,7 @@ find_package(Boost 1.66.0 REQUIRED
     program_options
     unit_test_framework
 )
+target_link_libraries(data_server Boost::boost Boost::system Boost::filesystem)
 
 # Threads
 find_package(Threads REQUIRED)
