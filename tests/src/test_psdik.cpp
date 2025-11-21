@@ -7,11 +7,13 @@
 #include <chrono>
 
 // Основные заголовки программы
-#include "Logger.h"
-#include "DataCache.h"
-#include "ProtocolHandler.h"
-#include "ModbusTcpHandler.h"
-#include "DataServer.h"
+// #include "Logger.h"
+// #include "DataCache.h"
+// #include "ProtocolHandler.h"
+// #include "ModbusTcpHandler.h"
+// #include "DataServer.h"
+
+#include "../include/psdik.h"
 
 using namespace testing;
 using json = nlohmann::json;
@@ -20,6 +22,7 @@ using json = nlohmann::json;
 class MockProtocolHandler : public ProtocolHandler {
 public:
     MockProtocolHandler(DataCache& cache) : ProtocolHandler("mock", cache) {}
+    ~MockProtocolHandler() noexcept override = default;
     
     MOCK_METHOD(bool, trySpecificConnect, (const json& connectionParams), (override));
     MOCK_METHOD(json, readData, (const json& variables), (override));

@@ -1,6 +1,6 @@
-// test_utilities.h
-#ifndef TEST_UTILITIES_H
-#define TEST_UTILITIES_H
+// test_psdic.h
+#ifndef test_psdic_H
+#define test_psdic_H
 
 #include <string>
 #include <fstream>
@@ -52,4 +52,4 @@ public:
     }
 };
 
-#endif // TEST_UTILITIES_H
+#endif // test_psdic_H

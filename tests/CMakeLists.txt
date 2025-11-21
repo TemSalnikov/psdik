@@ -12,17 +12,21 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 # Тестовые исходные файлы
+# set(TEST_SOURCES
+#     test_main.cpp
+#     test_Logger.cpp
+#     test_DataCache.cpp
+#     test_ProtocolHandler.cpp
+#     test_ModbusTcpHandler.cpp
+#     test_DataServer.cpp
+#     test_Integration.cpp
+#     test_Performance.cpp
+#     test_ThreadSafety.cpp
+#     test_utilities.cpp
+# )
+
 set(TEST_SOURCES
-    test_main.cpp
-    test_Logger.cpp
-    test_DataCache.cpp
-    test_ProtocolHandler.cpp
-    test_ModbusTcpHandler.cpp
-    test_DataServer.cpp
-    test_Integration.cpp
-    test_Performance.cpp
-    test_ThreadSafety.cpp
-    test_utilities.cpp
+    ./src/test_psdik.cpp
 )
 
 # Создание тестового исполняемого файла
@@ -64,7 +68,7 @@ gtest_discover_tests(run_tests
 )
 
 # Цели для удобства
-add_custom_target(test
+add_custom_target(target_test
     DEPENDS run_tests
     COMMAND ${CMAKE_BINARY_DIR}/run_tests
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

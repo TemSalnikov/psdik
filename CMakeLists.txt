@@ -9,9 +9,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Указываем путь к локальному Boost
-set(BOOST_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/contrib/boost)
-set(BOOST_INCLUDEDIR ${BOOST_ROOT})
+set(BOOST_ROOT ${CMAKE_SOURCE_DIR}/contrib/boost)
+set(BOOST_INCLUDEDIR ${BOOST_ROOT}/boost)
 set(BOOST_LIBRARYDIR ${BOOST_ROOT}/libs)
+
+set(DATA_SERVER_TCP_PORT 123123)
+
+
 
 # Политики CMake
 if(POLICY CMP0077)
@@ -34,22 +38,22 @@ include(GNUInstallDirs)
 find_package(PkgConfig REQUIRED)
 
 # Boost
-find_package(Boost REQUIRED 
-    COMPONENTS 
-    system 
-    thread 
-    chrono 
-    filesystem 
-    program_options
-    unit_test_framework
-)
-target_link_libraries(data_server Boost::boost Boost::system Boost::filesystem)
+# find_package(Boost REQUIRED 
+#     COMPONENTS 
+#     system 
+#     thread 
+#     chrono 
+#     filesystem 
+#     program_options
+#     unit_test_framework
+# )
+# target_link_libraries(data_server Boost::boost Boost::system Boost::filesystem)
 
 # Threads
 find_package(Threads REQUIRED)
 
 # nlohmann_json (может быть установлен через package manager или как submodule)
-find_package(nlohmann_json 3.9.0 REQUIRED)
+# find_package(nlohmann_json 3.9.0 REQUIRED)
 
 # Проверка дополнительных библиотек для протоколов
 find_library(MODBUS_LIBRARY NAMES modbus)
@@ -112,7 +116,82 @@ configure_file(
 )
 
 # Включение поддиректорий
-add_subdirectory(src)
+# add_subdirectory(src)
+
+set(SOURCES
+    ./src/psdik.cpp
+)
+
+set(HEADERS
+    ./include/psdik.h
+)
+
+# Создание библиотеки (опционально)
+# add_library(data_server_lib STATIC ${SOURCES})
+
+# Основной исполняемый файл
+# add_executable(data_server main.cpp)
+add_executable(data_server ${SOURCES})
+
+
+# Связывание зависимостей
+target_link_libraries(data_server
+    PRIVATE
+        data_server_lib
+        Boost::boost
+        Boost::system
+        Boost::thread
+        Boost::chrono
+        Boost::filesystem
+        Boost::program_options
+        nlohmann_json::nlohmann_json
+        Threads::Threads
+)
+
+# Дополнительные библиотеки для протоколов
+if(HAVE_LIBMODBUS)
+    target_link_libraries(data_server PRIVATE ${MODBUS_LIBRARY})
+    target_compile_definitions(data_server PRIVATE HAVE_LIBMODBUS)
+endif()
+
+# Установка
+install(TARGETS data_server
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(FILES ${HEADERS}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/data_server
+)
+
+# Компиляционные определения
+target_compile_definitions(data_server
+    PRIVATE
+        BOOST_ALL_NO_LIB
+        BOOST_ASIO_STANDALONE
+        _WEBSOCKETPP_CPP11_STL_
+)
+
+# Включение директорий
+target_include_directories(data_server
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_BINARY_DIR}
+)
+
+# Свойства цели
+set_target_properties(data_server PROPERTIES
+    OUTPUT_NAME "data-server"
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF
+)
+
+# Генерация файла версии
+configure_file(
+    ${CMAKE_SOURCE_DIR}/include/version.h.in
+    ${CMAKE_BINARY_DIR}/version.h
+    @ONLY
+)
 
 # Тесты
 if(BUILD_TESTS)
@@ -143,7 +222,7 @@ set(CPACK_PACKAGE_VENDOR "Industrial Solutions")
 set(CPACK_PACKAGE_VERSION_MAJOR "${DataServer_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${DataServer_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${DataServer_VERSION_PATCH}")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+# set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+# set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 
 include(CPack)

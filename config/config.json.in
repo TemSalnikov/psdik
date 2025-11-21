@@ -1,4 +1,3 @@
-# config/config.json.in - шаблон конфигурационного файла
 
 {
   "server_settings": {

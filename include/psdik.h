@@ -21,6 +21,10 @@
 #include <iomanip>
 #include <sstream>
 
+using json = nlohmann::json;
+using namespace boost::asio;
+using namespace boost::interprocess;
+
 class IdGenerator {
 private:
     std::atomic<int64_t> counter{0};
@@ -68,6 +72,11 @@ struct HistoricalValue {
     std::string quality; // "good", "bad", "uncertain"
 };
 
+#define LOG_DEBUG(msg) Logger::getInstance().log(Logger::DEBUG, msg)
+#define LOG_INFO(msg) Logger::getInstance().log(Logger::INFO, msg)
+#define LOG_WARNING(msg) Logger::getInstance().log(Logger::WARNING, msg)
+#define LOG_ERROR(msg) Logger::getInstance().log(Logger::ERROR, msg)
+
 // Кэш данных с историей
 class DataCache {
 private:
@@ -78,12 +87,12 @@ private:
     size_t maxHistorySize = 100;
     
 public:
-    void updateValue(int64_t id, const std::string& name, const json& value, const std::string& quality = "good");
-    std::vector<HistoricalValue> getHistory(int64_t id, size_t count);
-    json getCurrentValue(int64_t id);
-    json getAllCurrentValues();
-    std::string getNameById(int64_t id);
-    bool idExists(int64_t id);
+    virtual void updateValue(int64_t id, const std::string& name, const json& value, const std::string& quality = "good");
+    virtual std::vector<HistoricalValue> getHistory(int64_t id, size_t count);
+    virtual json getCurrentValue(int64_t id);
+    virtual json getAllCurrentValues();
+    virtual std::string getNameById(int64_t id);
+    virtual bool idExists(int64_t id);
 };
 
 // Базовый класс для протоколов с улучшенной обработкой ошибок
@@ -100,7 +109,7 @@ protected:
 public:
     ProtocolHandler(const std::string& protoName, DataCache& cache) 
         : name(protoName), dataCache(cache) {}  
-    virtual ~ProtocolHandler() = default;
+    virtual ~ProtocolHandler() noexcept = default;
     void setConnectionParameters(const json& config);
     virtual bool connect();
     virtual void disconnect();

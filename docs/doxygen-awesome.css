@@ -1,0 +1,241 @@
+/* doxygen-awesome.css - Enhanced styling for industrial documentation */
+
+/* Main theme colors */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #ffffff;
+    --text-color: #2c3e50;
+    --border-color: #bdc3c7;
+    --code-background: #f8f9fa;
+    --warning-color: #f39c12;
+    --success-color: #27ae60;
+}
+
+/* Header styling */
+#top {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-bottom: 3px solid var(--accent-color);
+}
+
+/* Navigation improvements */
+.tablist li {
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.tablist li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Code blocks */
+div.fragment {
+    background-color: var(--code-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 12px;
+}
+
+/* Class and struct documentation */
+.memproto {
+    background-color: var(--code-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+/* Table improvements */
+table.doxtable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.doxtable th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 12px;
+}
+
+table.doxtable td {
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+}
+
+/* Industrial protocol specific styling */
+.protocol-modbus {
+    border-left: 4px solid #e74c3c;
+    padding-left: 12px;
+}
+
+.protocol-iec104 {
+    border-left: 4px solid #3498db;
+    padding-left: 12px;
+}
+
+.protocol-snmp {
+    border-left: 4px solid #27ae60;
+    padding-left: 12px;
+}
+
+/* Warning and note boxes */
+.warning, .attention {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+.note, .remark {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    border-radius: 4px;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+/* Search box improvements */
+#MSearchBox {
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    padding: 5px 15px;
+}
+
+/* Tree view enhancements */
+#nav-tree {
+    background-color: var(--code-background);
+}
+
+#nav-tree .item {
+    padding: 4px 8px;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+#nav-tree .item:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Method and function signatures */
+.memtitle {
+    background: linear-gradient(to right, var(--code-background), white);
+    border-left: 4px solid var(--secondary-color);
+    padding: 8px 12px;
+}
+
+/* Industrial data type highlighting */
+.type-industrial {
+    color: #8e44ad;
+    font-weight: bold;
+}
+
+.type-protocol {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #top {
+        padding: 10px;
+    }
+    
+    .tablist li {
+        display: block;
+        margin: 5px 0;
+    }
+    
+    div.fragment {
+        font-size: 14px;
+        overflow-x: auto;
+    }
+}
+
+/* Print styles */
+@media print {
+    .tablist, #nav-tree, #nav-path {
+        display: none;
+    }
+    
+    #top {
+        background: none;
+        color: black;
+    }
+}
+
+/* Animation for interactive elements */
+.memitem {
+    transition: transform 0.2s ease;
+}
+
+.memitem:hover {
+    transform: translateX(5px);
+}
+
+/* Custom industrial components */
+.industrial-component {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.industrial-component .title {
+    color: var(--primary-color);
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+/* Protocol-specific documentation */
+.protocol-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.protocol-section h2 {
+    color: white;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Code examples */
+.example {
+    background: #2d3748;
+    color: #e2e8f0;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.example .caption {
+    color: #a0aec0;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+/* Performance metrics */
+.performance-metric {
+    display: inline-block;
+    background: var(--success-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    margin: 0 4px;
+}
+
+/* Thread safety indicators */
+.thread-safe {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.thread-unsafe {
+    color: var(--warning-color);
+    font-weight: bold;
+}

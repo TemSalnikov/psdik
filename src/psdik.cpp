@@ -1,4 +1,4 @@
-#include <psdik.h>
+#include <./include/psdik.h>
 
 using json = nlohmann::json;
 using namespace boost::asio;
@@ -26,7 +26,7 @@ int64_t IdGenerator::getCurrentCounter() const {
 
 
 // Система логирования
-static Logger& Logger::getInstance() {
+Logger& Logger::getInstance() {
     static Logger instance;
     return instance;
 };
@@ -51,11 +51,6 @@ void Logger::log(Level level, const std::string& message) {
                 << " [" << levelStr << "] " << message << std::endl;
 };
 
-
-#define LOG_DEBUG(msg) Logger::getInstance().log(Logger::DEBUG, msg)
-#define LOG_INFO(msg) Logger::getInstance().log(Logger::INFO, msg)
-#define LOG_WARNING(msg) Logger::getInstance().log(Logger::WARNING, msg)
-#define LOG_ERROR(msg) Logger::getInstance().log(Logger::ERROR, msg)
 
 
 // Кэш данных с историей
@@ -131,7 +126,7 @@ bool DataCache::idExists(int64_t id) {
 ProtocolHandler::ProtocolHandler(const std::string& protoName, DataCache& cache) 
     : name(protoName), dataCache(cache) {}
     
-virtual ~ProtocolHandler() = default;
+
 
 void ProtocolHandler::setConnectionParameters(const json& config) {
     connectionParams.clear();
@@ -144,7 +139,7 @@ void ProtocolHandler::setConnectionParameters(const json& config) {
     }
 }
 
-virtual bool ProtocolHandler::connect() {
+bool ProtocolHandler::connect() {
     if (connectionParams.empty()) {
         LOG_ERROR("No connection parameters for " + name);
         return false;
@@ -181,7 +176,7 @@ virtual bool ProtocolHandler::connect() {
     return false;
 }
 
-virtual void ProtocolHandler::disconnect() {
+void ProtocolHandler::disconnect() {
     connected = false;
     LOG_INFO("Disconnected from " + name);
 }
@@ -195,7 +190,7 @@ void ProtocolHandler::updateData(int64_t id, const std::string& varName, const j
 
 
 // Modbus handler
-bool ModbusTcpHandler::trySpecificConnect(const json& connectionParams) override {
+bool ModbusTcpHandler::trySpecificConnect(const json& connectionParams) {
     try {
         // Здесь будет реальная реализация подключения Modbus
         context = std::make_unique<ModbusContext>();
@@ -217,7 +212,7 @@ bool ModbusTcpHandler::trySpecificConnect(const json& connectionParams) override
     return false;
 }
 
-json ModbusTcpHandler::readData(const json& variables) override {
+json ModbusTcpHandler::readData(const json& variables) {
     if (!connected) {
         if (!connect()) {
             return json::object();
@@ -524,17 +519,17 @@ void DataServer::handleTcpClient(ip::tcp::socket socket) {
                             return; // Сокет будет использоваться для push-уведомлений
                         } else {
                             std::string response = "{\"error\": \"Unknown variable ID\"}\n";
-                            write(socket, buffer(response));
+                            write(socket, boost::asio::buffer(response));
                         }
                     } catch (const std::exception& e) {
                         std::string response = "{\"error\": \"Invalid variable ID format\"}\n";
-                        write(socket, buffer(response));
+                        write(socket, boost::asio::buffer(response));
                     }
                 }
             } else if (request == "GET_ALL") {
                 auto data = dataCache.getAllCurrentValues();
                 std::string response = data.dump() + "\n";
-                write(socket, buffer(response));
+                write(socket, boost::asio::buffer(response));
             } else if (request.find("GET_HISTORY") == 0) {
                 // Формат: GET_HISTORY variable_id count
                 auto pos1 = request.find(' ');
@@ -555,15 +550,15 @@ void DataServer::handleTcpClient(ip::tcp::socket socket) {
                             });
                         }
                         std::string response = historyJson.dump() + "\n";
-                        write(socket, buffer(response));
+                        write(socket, boost::asio::buffer(response));
                     } catch (const std::exception& e) {
                         std::string response = "{\"error\": \"Invalid variable ID\"}\n";
-                        write(socket, buffer(response));
+                        write(socket, boost::asio::buffer(response));
                     }
                 }
             } else if (request == "GET_CONFIG") {
                 std::string response = config.dump(4) + "\n";
-                write(socket, buffer(response));
+                write(socket, boost::asio::buffer(response));
             } else if (request.find("SAVE_CONFIG") == 0) {
                 // Формат: SAVE_CONFIG [filename]
                 auto pos = request.find(' ');
@@ -573,7 +568,7 @@ void DataServer::handleTcpClient(ip::tcp::socket socket) {
                 }
                 saveConfig(filename);
                 std::string response = "{\"status\": \"success\", \"message\": \"Configuration saved\"}\n";
-                write(socket, buffer(response));
+                write(socket, boost::asio::buffer(response));
             }
         }
         
@@ -581,7 +576,7 @@ void DataServer::handleTcpClient(ip::tcp::socket socket) {
         if (!requestJson.empty()) {
             json response = handleJsonRequest(requestJson);
             std::string responseStr = response.dump() + "\n";
-            write(socket, buffer(responseStr));
+            write(socket, boost::asio::buffer(responseStr));
         }
         
     } catch (const std::exception& e) {
